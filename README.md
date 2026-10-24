@@ -1,35 +1,36 @@
-🛡️ SOC Home Lab: ELK Stack & Suricata Network Security Monitoring
-A complete Security Operations Center (SOC) Home Lab designed for real-time network traffic analysis, threat detection, and automated threat intelligence enrichment using Suricata IDS, the ELK Stack (Elasticsearch, Logstash, Kibana), and custom Python scripts.
+# 🛡️ SOC Home Lab: ELK Stack & Suricata Network Security Monitoring
 
-📌 Project Overview
+A complete **Security Operations Center (SOC) Home Lab** designed for real-time network traffic analysis, threat detection, and automated threat intelligence enrichment using **Suricata IDS**, the **ELK Stack (Elasticsearch, Logstash, Kibana)**, and custom **Python scripts**.
+
+---
+
+## 📌 Project Overview
+
 This project demonstrates a fully functional Network Security Monitoring (NSM) and automated threat enrichment pipeline designed to:
-. Detect malicious network traffic using Suricata IDS.
 
-. Ingest and structure complex log streams via Filebeat and Logstash.
+- **Detect** malicious network traffic using Suricata IDS.
+- **Ingest and structure** complex log streams via Filebeat and Logstash.
+- **Index, store, and correlate** security event data in Elasticsearch.
+- **Visualize** real-time attack metrics and alerts on custom Kibana Dashboards.
+- **Automatically query** threat feeds (VirusTotal / AlienVault OTX) using custom Python scripts (`enrichment.py`) to categorize suspicious indicators.
+- **Trigger** instant security notifications (`notify.py`) for high-severity detections.
 
-. Index, store, and correlate security event data in Elasticsearch.
+---
 
-. Visualize real-time attack metrics and alerts on custom Kibana Dashboards.
+## 🛠️ Technologies Used
 
-. Automatically query threat feeds (VirusTotal / AlienVault OTX) using custom Python scripts (enrichment.py) to categorize suspicious indicators.
+- **IDS / NTA**: Suricata IDS
+- **SIEM & Log Management**: Elasticsearch, Logstash, Kibana (ELK Stack), Filebeat
+- **Automation & Scripting**: Python 3 (`enrichment.py`, `notify.py`)
+- **Containerization**: Docker, Docker Compose
+- **Threat Intelligence**: VirusTotal API, AlienVault OTX
+- **Reconnaissance & Testing**: Nmap
 
-. Trigger instant security notifications (notify.py) for high-severity detections.
+---
 
-🛠️ Technologies Used
-. IDS / NTA: Suricata IDS
+## 🏗️ Architecture
 
-. SIEM & Log Management: Elasticsearch, Logstash, Kibana (ELK Stack), Filebeat
-
-. Automation & Scripting: Python 3 (enrichment.py, notify.py)
-
-. Containerization: Docker, Docker Compose
-
-. Threat Intelligence: VirusTotal API, AlienVault OTX
-
-. Reconnaissance & Testing: Nmap
-
-🏗️ Architecture
-Plaintext
+```text
        Network Traffic / Attack Simulation
                         │
                         ▼
@@ -45,51 +46,32 @@ Elasticsearch                     Python Enrichment Engine
        ▼                                 │
 Kibana Dashboards                        ▼
                                Notification Engine
-                               
- ⚔️ Attack Simulations & Testing
-The system was validated by executing simulated network attacks and analyzing the resulting IDS rules and Logstash pipelines:
+ ```
 
-Nmap Port Scans: TCP SYN Scan, Service Version Detection (-sV), and OS Fingerprinting (-O).
+## ⚔️ Attack Simulations
 
-ICMP Ping Floods: Network sweep and volumetric traffic testing.
+The following network attack vectors were simulated against the monitored network interface to test the responsiveness of Suricata rules and the ELK logging pipeline:
 
-Malformed Packet / Payload Injection: Verified custom Suricata detection rules.
+Nmap SYN Scan: Stealth port scanning to map open ports across active subnets.
 
-Threat Intelligence Pipeline Validation: Injected mock JSON payloads (test_event.json) to confirm automatic IP/Hash enrichment and alert dispatch.
+Service Version Detection (-sV): Scanning application footprints to detect service banners and vulnerabilities.
 
-🚀 Features
-Real-Time Threat Detection: Continuous packet inspection powered by custom and open-source Suricata rulesets.
+OS Fingerprinting (-O): Probing TCP/IP stack behavior to identify target operating systems.
 
-Automated Threat Intelligence: Custom enrichment.py script automatically pulls reputation scores from VirusTotal and OTX.
+ICMP Ping Flood: Generating high-density ICMP echo requests to test volumetric threshold alerts.
 
-Centralized Log Normalization: Logstash pipelines map incoming JSON log streams into normalized Elasticsearch documents.
+Payload / Malformed Packet Injection: Injecting malicious signatures to verify custom Suricata IDS rule alerts.
 
-Automated Security Notifications: Lightweight notify.py module fires instant alerts when critical threat thresholds are breached.
+Threat Intelligence Pipeline Test: Injecting mock JSON alerts (test_event.json) to trigger automatic enrichment scripts.
 
-Reproducible Infrastructure: Full stack orchestrated via docker-compose.yml for isolated deployment.
+## 📷 Screenshots
 
-📂 Repository Structure
+<img width="1901" height="840" alt="Screenshot 2026-09-29 102818" src="https://github.com/user-attachments/assets/db6fa01d-e6e8-4644-bfa1-b41bbb38b536" />
 
-.
-├── docker-compose.yml       # Orchestrates Elasticsearch, Kibana, and Logstash services
-├── Dockerfile-logstash      # Custom container build for Logstash
-├── Logstash/                # Pipeline definitions & configuration
-│   ├── config/logstash.yml
-│   └── pipeline/logstash.conf
-├── filebeat-ti/             # Filebeat threat intelligence module configs
-│   └── filebeat.yml
-├── enrichment.py            # Python script for querying threat intelligence APIs
-├── notify.py                # Python script for security alert notifications
-├── kibana.yml               # Kibana configuration file
-├── test.json                # Test event payload for pipeline verification
-└── test_event.json          # Mock Suricata alert data for testing enrichment
+<img width="1340" height="905" alt="Screenshot 2026-10-08 122601" src="https://github.com/user-attachments/assets/ba12883c-2232-46fe-8f1e-993acc6c6782" />
 
-📷 Screenshots
+<img width="1896" height="962" alt="Screenshot 2026-10-08 121918" src="https://github.com/user-attachments/assets/9f9dc877-3f23-4185-9e53-4363b646b576" />
 
-![alt text](<Screenshot 2026-09-29 102818.png>)
+## 🎯 Outcomes
 
-
-
-
-🎯 Outcome
 Successfully built an automated, end-to-end SOC Home Lab capable of capturing raw network traffic, identifying malicious activity using Suricata IDS, enriching suspicious IOCs via external threat intelligence APIs, and displaying real-time security insights inside Kibana.
