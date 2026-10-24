@@ -1,0 +1,18 @@
+{
+  "@timestamp": "2026-02-20T13:20:00Z",
+  "event": {
+    "module": "suricata",
+    "dataset": "suricata.eve",
+    "kind": "event",
+    "category": "file",
+    "type": "info"
+  },
+  "source": {
+    "ip": "192.168.56.101"
+  },
+  "file": {
+    "hash": {
+      "sha256": "2afcac3231235b5cea0fc702d705ec76afec424a9cec820749b83b6299d1fe1b"
+    }
+  }
+}

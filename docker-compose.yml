@@ -1,0 +1,95 @@
+
+version: "3.8"
+
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.3
+    container_name: project-elasticsearch-1
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=true
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+
+      # LAB MODE (no TLS, simpler)
+      - xpack.security.http.ssl.enabled=false
+      - xpack.security.transport.ssl.enabled=false
+
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+    ports:
+      - "9200:9200"
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    networks:
+      - elk
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost:9200 >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.11.3
+    container_name: project-kibana-1
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=kibana_system
+      - ELASTICSEARCH_PASSWORD=PASSWORD
+      
+      # REQUIRED for Detection Rules / Alerting / Saved Objects encryption
+      - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=${KIBANA_ENCRYPTION_KEY}
+      - XPACK_SECURITY_ENCRYPTIONKEY=${KIBANA_SECURITY_KEY}
+      - XPACK_REPORTING_ENCRYPTIONKEY=${KIBANA_REPORTING_KEY}
+
+      
+   # volumes:
+   #   - C:/ELK/kibana.yml:/usr/share/kibana/config/kibana.yml
+    ports:
+      - "5601:5601"
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - elk
+
+  logstash:
+    build:
+      context: .
+      dockerfile: Dockerfile-logstash
+    container_name: project-logstash-1
+    ports:
+      - "5044:5044"
+    environment:
+      - ELASTIC_USERNAME=elastic
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+    volumes:
+      - C:/ELK/Logstash/pipeline:/usr/share/logstash/pipeline
+      - C:/ELK/Logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - elk
+
+  filebeat-ti:
+    image: docker.elastic.co/beats/filebeat:8.11.3
+    container_name: filebeat-ti
+    user: root
+    command: ["filebeat", "-e", "--strict.perms=false"]
+    environment:
+      - ELASTIC_USERNAME=elastic
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+    volumes:
+      - C:/ELK/filebeat-ti/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+      kibana:
+        condition: service_started
+    networks:
+      - elk
+
+networks:
+  elk:
+    driver: bridge
+volumes:
+  esdata:

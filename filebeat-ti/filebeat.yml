@@ -1,0 +1,24 @@
+filebeat.inputs: []
+
+filebeat.modules:
+- module: threatintel
+  otx:
+    enabled: true
+    var.input: httpjson
+    var.api_token: "OTX api key"
+    var.first_interval: 720h
+    var.interval: 60m
+
+output.elasticsearch:
+  hosts: ["http://elasticsearch:9200"]
+  username: "elastic"
+  password: "elastic password"
+
+setup.kibana:
+  host: "http://kibana:5601"
+
+setup.ilm.enabled: false
+
+logging.level: info
+logging.to_files: false
+logging.to_stderr: true

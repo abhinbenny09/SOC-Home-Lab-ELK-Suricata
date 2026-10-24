@@ -1,0 +1,16 @@
+elasticsearch.hosts: ["http://elasticsearch:9200"]
+elasticsearch.username: "kibana_system"
+elasticsearch.password: "elasticsearch password"
+
+server.host: "0.0.0.0"
+server.port: 5601
+
+xpack.encryptedSavedObjects.encryptionKey: "Kibana encryption key"
+xpack.security.encryptionKey: "Kibana security key"
+xpack.reporting.encryptionKey: "Kibana reporting key"
+
+externalUrl.policy:
+  - allow: true
+    host: "www.virustotal.com"
+  - allow: true
+    host: "otx.alienvault.com"

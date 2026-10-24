@@ -1,0 +1,14 @@
+{
+  "@timestamp": "2026-02-24T06:30:00Z",
+  "event": {
+    "module": "suricata",
+    "kind": "event",
+    "category": ["network"],
+    "type": ["connection"]
+  },
+  "file": {
+    "hash": {
+      "md5": "640f54bb6d29d98d92344136fee49d07"
+    }
+  }
+}

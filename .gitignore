@@ -1,0 +1,12 @@
+# Environment & Secrets
+.env
+*.env
+
+# Large Binaries & Archives
+*.zip
+*.tar
+*.gz
+
+# Elastic Agent nested components
+elastic-agent/
+elastic-agent-*/
